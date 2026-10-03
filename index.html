@@ -1,99 +1,117 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#eaf5f1">
-<title>Vehicle Match! | Sammie's life studio</title>
+<title>Vehicle Memory Match | Sammie's life studio</title>
 <style>
-:root{--ink:#26343a;--mint:#e8f5f0;--cream:#fff7e4;--yellow:#f7d979;--green:#79b7a5;--pink:#f3b0bf}
+:root{--ink:#27353b;--cream:#fff7e5;--mint:#dff2eb;--yellow:#f7d979;--shadow:#b9c1bd}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e8f5f0,#fff7e5);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:var(--ink)}
-.app{width:min(100%,540px);margin:auto;padding:calc(14px + env(safe-area-inset-top)) 14px 30px}
-.brand{text-align:center;font-weight:900;font-size:14px;letter-spacing:.5px}
-h1{text-align:center;font-size:clamp(28px,8vw,40px);margin:4px 0 3px}
-.sub{text-align:center;margin:0 0 15px;color:#5e6b70;font-weight:750}
-.card{background:rgba(255,255,255,.94);border:3px solid var(--ink);border-radius:28px;padding:13px;box-shadow:0 8px 0 rgba(38,52,58,.15)}
-.hud{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:16px;padding:2px 4px 12px}
-#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.cardbtn{border:0;padding:0;background:transparent;aspect-ratio:1;perspective:800px;cursor:pointer}
-.inner{position:relative;width:100%;height:100%;transition:transform .42s;transform-style:preserve-3d}
-.cardbtn.flipped .inner,.cardbtn.matched .inner{transform:rotateY(180deg)}
-.face,.back{position:absolute;inset:0;border:3px solid var(--ink);border-radius:16px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;box-shadow:0 4px 0 rgba(38,52,58,.17)}
-.face{font-size:27px;background:linear-gradient(145deg,#f7e9cb,#efd59b)}
-.back{font-size:38px;background:#fff;transform:rotateY(180deg)}
-.cardbtn.matched .back{background:#e0f3eb;border-color:#4d9c83}
-#message{text-align:center;min-height:26px;margin:12px 0 3px;font-weight:900}
-button.action{display:block;margin:12px auto 1px;border:3px solid var(--ink);border-radius:18px;background:var(--yellow);padding:10px 19px;font-size:17px;font-weight:900;box-shadow:0 5px 0 var(--ink)}
-button.action:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
-.small{text-align:center;font-size:12px;color:#6c777b;margin-top:13px}
-#win{display:none;position:fixed;inset:0;background:rgba(38,52,58,.5);align-items:center;justify-content:center;padding:20px;z-index:5}
-.winbox{width:min(92vw,390px);background:#fff;border:4px solid var(--ink);border-radius:30px;padding:27px 20px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.18)}
-.big{font-size:54px}.winbox h2{font-size:28px;margin:4px 0}.winbox p{font-weight:800;color:#5d6b70}
+body{margin:0;min-height:100vh;background:linear-gradient(150deg,#e8f5f0 0%,#fff7e6 100%);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:var(--ink)}
+.app{width:min(100%,520px);margin:auto;padding:calc(14px + env(safe-area-inset-top)) 14px 30px}
+.brand{text-align:center;font-weight:900;font-size:14px;margin-bottom:3px}
+h1{text-align:center;font-size:clamp(28px,8vw,39px);margin:0;line-height:1.15}
+.sub{text-align:center;color:#637075;font-weight:800;margin:7px 0 15px}
+.panel{background:#fff;border:3px solid var(--ink);border-radius:28px;padding:14px;box-shadow:0 8px 0 rgba(39,53,59,.16)}
+.hud{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:16px;padding:1px 3px 13px}
+#grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.card{appearance:none;-webkit-appearance:none;width:100%;height:82px;border:0;padding:0;background:transparent;cursor:pointer;perspective:900px}
+.card-inner{position:relative;width:100%;height:100%;transition:transform .42s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
+.card-face,.card-back{position:absolute;inset:0;border:3px solid var(--ink);border-radius:17px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 5px 0 var(--shadow)}
+.card-face{background:linear-gradient(145deg,#f8e9c9,#efcf8e);font-size:30px}
+.card-back{background:#fff;transform:rotateY(180deg);font-size:39px}
+.card.matched .card-back{background:#dcf3e9;border-color:#4c9b82;box-shadow:0 5px 0 #9bc7b8}
+.card.matched .card-back:after{content:"✓";position:absolute;right:6px;top:3px;font-size:15px;font-weight:900;color:#4c9b82}
+#message{text-align:center;min-height:27px;margin:13px 0 2px;font-size:16px;font-weight:900}
+.action{display:block;margin:11px auto 0;border:3px solid var(--ink);border-radius:18px;background:var(--yellow);padding:10px 19px;font-size:17px;font-weight:900;box-shadow:0 5px 0 var(--ink)}
+.action:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.tip{text-align:center;font-size:12px;color:#6c777b;margin-top:13px}
+#win{display:none;position:fixed;inset:0;background:rgba(39,53,59,.52);align-items:center;justify-content:center;padding:20px;z-index:10}
+.winbox{width:min(92vw,390px);background:#fff;border:4px solid var(--ink);border-radius:30px;padding:28px 20px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.2)}
+.winemoji{font-size:54px}.winbox h2{font-size:29px;margin:5px 0}.winbox p{font-weight:800;color:#647176}
+@media(max-width:370px){.card{height:72px}.card-face{font-size:26px}.card-back{font-size:34px}#grid{gap:8px}}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="brand">✦ Sammie's life studio ✦</div>
-<h1>🚗 Vehicle Match!</h1>
+<h1>🚗 Vehicle Memory Match</h1>
 <p class="sub">Find two matching vehicles! 👀</p>
-<section class="card">
+<section class="panel">
 <div class="hud"><span>PAIRS <b id="pairs">0</b> / 8</span><span>⭐ <b id="score">0</b></span></div>
 <div id="grid"></div>
 <div id="message">Tap a card to start! 🎮</div>
 <button class="action" id="restart">🔄 PLAY AGAIN</button>
 </section>
-<div class="small">Match the same vehicles • Original game by Sammie's life studio</div>
+<div class="tip">Match the same vehicles • Sammie's life studio</div>
 </main>
 <div id="win">
 <div class="winbox">
-<div class="big">🏆🚗🚌🚁</div>
+<div class="winemoji">🏆🚗🚌🚁</div>
 <h2>Great Job!</h2>
-<p>You matched all 8 pairs! ⭐ <span id="finalScore">0</span></p>
+<p>You matched all 8 pairs! ⭐ <b id="finalScore">0</b></p>
 <button class="action" id="again">PLAY AGAIN 🎮</button>
 </div>
 </div>
 <script>
 const vehicles=["🚗","🚌","🚲","✈️","🚁","🚕","🚒","🚆"];
-let first=null,second=null,lock=false,pairs=0,score=0;
-const grid=document.querySelector("#grid"),msg=document.querySelector("#message");
-const scoreEl=document.querySelector("#score"),pairsEl=document.querySelector("#pairs");
+let first=null,second=null,lock=false,pairs=0,score=0,turns=0;
+const grid=document.getElementById("grid"),msg=document.getElementById("message");
 function shuffle(a){return a.sort(()=>Math.random()-.5)}
 function start(){
- first=null;second=null;lock=false;pairs=0;score=0;
- pairsEl.textContent=0;scoreEl.textContent=0;msg.textContent="Tap a card to start! 🎮";
- document.querySelector("#win").style.display="none";grid.innerHTML="";
+ first=null;second=null;lock=false;pairs=0;score=0;turns=0;
+ document.getElementById("pairs").textContent="0";
+ document.getElementById("score").textContent="0";
+ msg.textContent="Tap a card to start! 🎮";
+ document.getElementById("win").style.display="none";
+ grid.innerHTML="";
  shuffle([...vehicles,...vehicles]).forEach((emoji)=>{
-   const b=document.createElement("button");b.className="cardbtn";
-   b.innerHTML='<span class="inner"><span class="face">❔</span><span class="back">'+emoji+'</span></span>';
-   b.dataset.value=emoji;b.onclick=()=>flip(b);
-   grid.appendChild(b);
+   const card=document.createElement("div");
+   card.className="card";
+   card.innerHTML='<div class="card-inner"><div class="card-face">❔</div><div class="card-back">'+emoji+'</div></div>';
+   card.dataset.value=emoji;
+   card.addEventListener("click",()=>flip(card));
+   grid.appendChild(card);
  });
 }
 function flip(card){
- if(lock||card===first||card.classList.contains("matched"))return;
+ if(lock||card===first||card.classList.contains("matched")||card.classList.contains("flipped"))return;
  card.classList.add("flipped");
- if(!first){first=card;msg.textContent="Now find the same vehicle! 🔎";return}
- second=card;lock=true;
+ if(!first){
+   first=card;
+   msg.textContent="Find the same vehicle! 🔎";
+   return;
+ }
+ second=card;lock=true;turns++;
  if(first.dataset.value===second.dataset.value){
    first.classList.add("matched");second.classList.add("matched");
-   pairs++;score+=20;pairsEl.textContent=pairs;scoreEl.textContent=score;
-   msg.textContent="🎉 It's a match!";
+   pairs++;score+=20;
+   document.getElementById("pairs").textContent=pairs;
+   document.getElementById("score").textContent=score;
+   msg.textContent="🎉 Match!";
    first=null;second=null;lock=false;
    if(pairs===8){
-     setTimeout(()=>{document.querySelector("#finalScore").textContent=score;document.querySelector("#win").style.display="flex"},500);
+     setTimeout(()=>{
+       document.getElementById("finalScore").textContent=score;
+       document.getElementById("win").style.display="flex";
+     },550);
    }
  }else{
-   score=Math.max(0,score-2);scoreEl.textContent=score;
-   msg.textContent="Not a match! Try again! 😊";
+   score=Math.max(0,score-2);
+   document.getElementById("score").textContent=score;
+   msg.textContent="Oops! Not the same. 🙈";
    setTimeout(()=>{
-     first.classList.remove("flipped");second.classList.remove("flipped");
+     first.classList.remove("flipped");
+     second.classList.remove("flipped");
      first=null;second=null;lock=false;
-   },850);
+     msg.textContent="Keep looking! Find a matching pair. 🔎";
+   },900);
  }
 }
-document.querySelector("#restart").onclick=start;
-document.querySelector("#again").onclick=start;
+document.getElementById("restart").onclick=start;
+document.getElementById("again").onclick=start;
 start();
 </script>
 </body>
