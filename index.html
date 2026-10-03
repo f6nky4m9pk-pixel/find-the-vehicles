@@ -6,32 +6,45 @@
 <meta name="theme-color" content="#eaf5f1">
 <title>Vehicle Memory Match | Sammie's life studio</title>
 <style>
-:root{--ink:#27353b;--cream:#fff7e5;--mint:#dff2eb;--yellow:#f7d979;--shadow:#b9c1bd}
+:root{--ink:#26353b;--mint:#dff2eb;--yellow:#f7d978;--cream:#fff7e4;--green:#65aa8e;--pink:#f3a9bc}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;background:linear-gradient(150deg,#e8f5f0 0%,#fff7e6 100%);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:var(--ink)}
-.app{width:min(100%,520px);margin:auto;padding:calc(14px + env(safe-area-inset-top)) 14px 30px}
-.brand{text-align:center;font-weight:900;font-size:14px;margin-bottom:3px}
-h1{text-align:center;font-size:clamp(28px,8vw,39px);margin:0;line-height:1.15}
-.sub{text-align:center;color:#637075;font-weight:800;margin:7px 0 15px}
-.panel{background:#fff;border:3px solid var(--ink);border-radius:28px;padding:14px;box-shadow:0 8px 0 rgba(39,53,59,.16)}
-.hud{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:16px;padding:1px 3px 13px}
-#grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.card{appearance:none;-webkit-appearance:none;width:100%;height:82px;border:0;padding:0;background:transparent;cursor:pointer;perspective:900px}
-.card-inner{position:relative;width:100%;height:100%;transition:transform .42s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
-.card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
-.card-face,.card-back{position:absolute;inset:0;border:3px solid var(--ink);border-radius:17px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 5px 0 var(--shadow)}
-.card-face{background:linear-gradient(145deg,#f8e9c9,#efcf8e);font-size:30px}
-.card-back{background:#fff;transform:rotateY(180deg);font-size:39px}
-.card.matched .card-back{background:#dcf3e9;border-color:#4c9b82;box-shadow:0 5px 0 #9bc7b8}
-.card.matched .card-back:after{content:"✓";position:absolute;right:6px;top:3px;font-size:15px;font-weight:900;color:#4c9b82}
-#message{text-align:center;min-height:27px;margin:13px 0 2px;font-size:16px;font-weight:900}
-.action{display:block;margin:11px auto 0;border:3px solid var(--ink);border-radius:18px;background:var(--yellow);padding:10px 19px;font-size:17px;font-weight:900;box-shadow:0 5px 0 var(--ink)}
+body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e7f5ef,#fff7e4);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:var(--ink);overflow-x:hidden}
+.app{width:min(100%,520px);margin:auto;padding:calc(12px + env(safe-area-inset-top)) 14px 30px}
+.brand{text-align:center;font-size:14px;font-weight:900;margin-bottom:2px}
+h1{text-align:center;font-size:clamp(27px,8vw,38px);margin:0;line-height:1.1}
+.sub{text-align:center;color:#647277;font-weight:800;margin:6px 0 13px}
+.topbar{display:flex;justify-content:center;gap:8px;margin:0 auto 10px;flex-wrap:wrap}
+.pill{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:6px 11px;font-size:14px;font-weight:900;box-shadow:0 3px 0 #b9c3bf}
+#timer.hot{background:#ffd7dc;animation:pulse .7s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.panel{position:relative;background:#fff;border:3px solid var(--ink);border-radius:28px;padding:13px;box-shadow:0 8px 0 rgba(38,53,59,.16)}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.card{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:0;width:100%;height:80px;perspective:900px;cursor:pointer}
+.inner{position:relative;width:100%;height:100%;transition:transform .42s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.card.flipped .inner,.card.matched .inner{transform:rotateY(180deg)}
+.face,.back{position:absolute;inset:0;border:3px solid var(--ink);border-radius:16px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 5px 0 #b8c1bd}
+.face{background:linear-gradient(145deg,#f8e9c9,#efd18e);font-size:29px}
+.back{background:#fff;transform:rotateY(180deg);font-size:38px}
+.card.matched .back{background:#dff3e9;border-color:#4e9c82;box-shadow:0 5px 0 #a2cbbc}
+.card.matched{animation:pop .42s ease}
+.card.wrong{animation:shake .38s ease}
+@keyframes pop{50%{transform:scale(1.08)}}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+#message{text-align:center;min-height:28px;margin:11px 0 1px;font-size:16px;font-weight:900}
+#combo{height:25px;text-align:center;font-size:19px;font-weight:1000;color:#e8893c;opacity:0;transform:scale(.7)}
+#combo.show{animation:combo .75s ease}
+@keyframes combo{20%{opacity:1;transform:scale(1.2)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}
+.action{display:block;margin:9px auto 0;border:3px solid var(--ink);border-radius:18px;background:var(--yellow);padding:10px 19px;font-size:17px;font-weight:900;box-shadow:0 5px 0 var(--ink)}
 .action:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
-.tip{text-align:center;font-size:12px;color:#6c777b;margin-top:13px}
-#win{display:none;position:fixed;inset:0;background:rgba(39,53,59,.52);align-items:center;justify-content:center;padding:20px;z-index:10}
-.winbox{width:min(92vw,390px);background:#fff;border:4px solid var(--ink);border-radius:30px;padding:28px 20px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.2)}
-.winemoji{font-size:54px}.winbox h2{font-size:29px;margin:5px 0}.winbox p{font-weight:800;color:#647176}
-@media(max-width:370px){.card{height:72px}.card-face{font-size:26px}.card-back{font-size:34px}#grid{gap:8px}}
+.sound{position:absolute;right:13px;top:11px;border:2px solid var(--ink);background:#fff;border-radius:50%;width:38px;height:38px;font-size:18px}
+.tip{text-align:center;font-size:12px;color:#6c777b;margin-top:12px}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:4}
+.star{position:absolute;font-size:28px;animation:fly .9s ease-out forwards}
+@keyframes fly{from{transform:translate(0,0) scale(.5) rotate(0);opacity:1}to{transform:translate(var(--x),var(--y)) scale(1.4) rotate(260deg);opacity:0}}
+#win,#lose{display:none;position:fixed;inset:0;background:rgba(38,53,59,.54);align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal{width:min(92vw,390px);background:#fff;border:4px solid var(--ink);border-radius:30px;padding:27px 20px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.2)}
+.big{font-size:54px}.modal h2{font-size:29px;margin:5px 0}.modal p{font-weight:800;color:#637075;line-height:1.5}
+@media(max-width:370px){.card{height:70px}#grid{gap:7px}.face{font-size:25px}.back{font-size:33px}}
 </style>
 </head>
 <body>
@@ -39,79 +52,136 @@ h1{text-align:center;font-size:clamp(28px,8vw,39px);margin:0;line-height:1.15}
 <div class="brand">✦ Sammie's life studio ✦</div>
 <h1>🚗 Vehicle Memory Match</h1>
 <p class="sub">Find two matching vehicles! 👀</p>
+<div class="topbar">
+  <div class="pill" id="timer">⏱️ 60s</div>
+  <div class="pill">PAIRS <b id="pairs">0</b>/8</div>
+  <div class="pill">⭐ <b id="score">0</b></div>
+  <div class="pill">🔥 <b id="comboNum">0</b></div>
+</div>
 <section class="panel">
-<div class="hud"><span>PAIRS <b id="pairs">0</b> / 8</span><span>⭐ <b id="score">0</b></span></div>
+<button class="sound" id="sound" aria-label="Sound">🔊</button>
 <div id="grid"></div>
 <div id="message">Tap a card to start! 🎮</div>
+<div id="combo"></div>
 <button class="action" id="restart">🔄 PLAY AGAIN</button>
 </section>
 <div class="tip">Match the same vehicles • Sammie's life studio</div>
 </main>
-<div id="win">
-<div class="winbox">
-<div class="winemoji">🏆🚗🚌🚁</div>
-<h2>Great Job!</h2>
-<p>You matched all 8 pairs! ⭐ <b id="finalScore">0</b></p>
+<div id="stars"></div>
+
+<div id="win"><div class="modal">
+<div class="big">🏆✨🚗</div><h2>Great Job!</h2>
+<p>You matched all 8 pairs!<br>⭐ Score: <b id="finalScore">0</b><br>🔥 Best combo: <b id="finalCombo">0</b></p>
 <button class="action" id="again">PLAY AGAIN 🎮</button>
-</div>
-</div>
+</div></div>
+
+<div id="lose"><div class="modal">
+<div class="big">⏰😲</div><h2>Time's Up!</h2>
+<p>Great try! You found <b id="losePairs">0</b> pairs.<br>⭐ Score: <b id="loseScore">0</b></p>
+<button class="action" id="retry">TRY AGAIN 🚗</button>
+</div></div>
+
 <script>
 const vehicles=["🚗","🚌","🚲","✈️","🚁","🚕","🚒","🚆"];
-let first=null,second=null,lock=false,pairs=0,score=0,turns=0;
+let first=null,second=null,lock=false,pairs=0,score=0,combo=0,bestCombo=0,time=60,timerId=null,started=false,muted=false,audio=null,musicTimer=null;
+
 const grid=document.getElementById("grid"),msg=document.getElementById("message");
+const scoreEl=document.getElementById("score"),pairsEl=document.getElementById("pairs");
+const timerEl=document.getElementById("timer"),comboEl=document.getElementById("combo");
+
 function shuffle(a){return a.sort(()=>Math.random()-.5)}
+function audioStart(){
+ if(muted)return;
+ if(!audio) audio=new (window.AudioContext||window.webkitAudioContext)();
+ if(audio.state==="suspended") audio.resume();
+ if(!musicTimer) playMusic();
+}
+function tone(freq,dur=.12,type="sine",vol=.035,when=0){
+ if(muted||!audio)return;
+ const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+when;
+ o.type=type;o.frequency.setValueAtTime(freq,t);
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+ o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+dur+.02);
+}
+function soundFlip(){tone(520,.07,"sine",.025)}
+function soundGood(){tone(660,.1,"triangle",.045);tone(880,.15,"triangle",.04,.08);tone(1047,.18,"triangle",.035,.18)}
+function soundBad(){tone(180,.14,"sawtooth",.025);tone(130,.16,"sawtooth",.02,.1)}
+function soundTick(){tone(440,.04,"square",.015)}
+function playMusic(){
+ if(muted||!audio)return;
+ const notes=[523,659,784,659,587,698,880,698];
+ let i=0;
+ musicTimer=setInterval(()=>{if(!muted&&audio){tone(notes[i%notes.length],.22,"sine",.012);i++}},520);
+}
+function stopMusic(){clearInterval(musicTimer);musicTimer=null}
+function burst(card){
+ const r=card.getBoundingClientRect();
+ for(let i=0;i<7;i++){
+  const s=document.createElement("span");s.className="star";s.textContent=["✨","⭐","💫"][i%3];
+  s.style.left=(r.left+r.width/2)+"px";s.style.top=(r.top+r.height/2)+"px";
+  s.style.setProperty("--x",(Math.random()*180-90)+"px");s.style.setProperty("--y",(Math.random()*-150-30)+"px");
+  document.getElementById("stars").appendChild(s);setTimeout(()=>s.remove(),950);
+ }
+}
 function start(){
- first=null;second=null;lock=false;pairs=0;score=0;turns=0;
- document.getElementById("pairs").textContent="0";
- document.getElementById("score").textContent="0";
- msg.textContent="Tap a card to start! 🎮";
- document.getElementById("win").style.display="none";
+ clearInterval(timerId);stopMusic();
+ first=null;second=null;lock=false;pairs=0;score=0;combo=0;bestCombo=0;time=60;started=false;
+ pairsEl.textContent=0;scoreEl.textContent=0;document.getElementById("comboNum").textContent=0;
+ timerEl.textContent="⏱️ 60s";timerEl.classList.remove("hot");
+ msg.textContent="Tap a card to start! 🎮";comboEl.className="";comboEl.textContent="";
+ document.getElementById("win").style.display="none";document.getElementById("lose").style.display="none";
  grid.innerHTML="";
  shuffle([...vehicles,...vehicles]).forEach((emoji)=>{
-   const card=document.createElement("div");
-   card.className="card";
-   card.innerHTML='<div class="card-inner"><div class="card-face">❔</div><div class="card-back">'+emoji+'</div></div>';
-   card.dataset.value=emoji;
-   card.addEventListener("click",()=>flip(card));
-   grid.appendChild(card);
+  const card=document.createElement("button");card.className="card";
+  card.innerHTML='<div class="inner"><div class="face">❔</div><div class="back">'+emoji+'</div></div>';
+  card.dataset.value=emoji;card.onclick=()=>flip(card);grid.appendChild(card);
  });
+}
+function beginClock(){
+ if(started)return;started=true;audioStart();
+ timerId=setInterval(()=>{
+  time--;timerEl.textContent="⏱️ "+time+"s";
+  if(time<=10){timerEl.classList.add("hot");if(time>0)soundTick()}
+  if(time<=0){clearInterval(timerId);lock=true;stopMusic();document.getElementById("losePairs").textContent=pairs;document.getElementById("loseScore").textContent=score;document.getElementById("lose").style.display="flex"}
+ },1000);
 }
 function flip(card){
  if(lock||card===first||card.classList.contains("matched")||card.classList.contains("flipped"))return;
- card.classList.add("flipped");
- if(!first){
-   first=card;
-   msg.textContent="Find the same vehicle! 🔎";
-   return;
- }
- second=card;lock=true;turns++;
+ beginClock();soundFlip();card.classList.add("flipped");
+ if(!first){first=card;msg.textContent="Find the same vehicle! 🔎";return}
+ second=card;lock=true;
  if(first.dataset.value===second.dataset.value){
-   first.classList.add("matched");second.classList.add("matched");
-   pairs++;score+=20;
-   document.getElementById("pairs").textContent=pairs;
-   document.getElementById("score").textContent=score;
-   msg.textContent="🎉 Match!";
-   first=null;second=null;lock=false;
-   if(pairs===8){
-     setTimeout(()=>{
-       document.getElementById("finalScore").textContent=score;
-       document.getElementById("win").style.display="flex";
-     },550);
-   }
+  first.classList.add("matched");second.classList.add("matched");
+  pairs++;combo++;bestCombo=Math.max(bestCombo,combo);
+  const bonus=20+(combo-1)*5;score+=bonus;
+  pairsEl.textContent=pairs;scoreEl.textContent=score;document.getElementById("comboNum").textContent=combo;
+  msg.textContent="🎉 Match!";
+  if(combo>=2){comboEl.textContent="🔥 "+combo+" COMBO! +"+bonus;comboEl.className="show"}
+  soundGood();burst(second);
+  first=null;second=null;lock=false;
+  if(pairs===8){
+   clearInterval(timerId);stopMusic();
+   setTimeout(()=>{document.getElementById("finalScore").textContent=score;document.getElementById("finalCombo").textContent=bestCombo;document.getElementById("win").style.display="flex"},550);
+  }
  }else{
-   score=Math.max(0,score-2);
-   document.getElementById("score").textContent=score;
-   msg.textContent="Oops! Not the same. 🙈";
-   setTimeout(()=>{
-     first.classList.remove("flipped");
-     second.classList.remove("flipped");
-     first=null;second=null;lock=false;
-     msg.textContent="Keep looking! Find a matching pair. 🔎";
-   },900);
+  combo=0;document.getElementById("comboNum").textContent=0;
+  score=Math.max(0,score-2);scoreEl.textContent=score;
+  msg.textContent="Oops! Not the same. 🙈";soundBad();
+  first.classList.add("wrong");second.classList.add("wrong");
+  setTimeout(()=>{
+   first.classList.remove("flipped","wrong");second.classList.remove("flipped","wrong");
+   first=null;second=null;lock=false;
+   msg.textContent="Keep looking! Find a matching pair. 🔎";
+  },850);
  }
 }
 document.getElementById("restart").onclick=start;
 document.getElementById("again").onclick=start;
+document.getElementById("retry").onclick=start;
+document.getElementById("sound").onclick=()=>{
+ muted=!muted;document.getElementById("sound").textContent=muted?"🔇":"🔊";
+ if(muted)stopMusic();else{audioStart();tone(660,.1,"triangle",.03)}
+};
 start();
 </script>
 </body>
