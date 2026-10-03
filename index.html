@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#eaf5f1">
+<title>Find the Vehicles! | Sammie's life studio</title>
+<style>
+:root{--ink:#26343a;--mint:#dff1eb;--cream:#fff8e9;--yellow:#f6d978;--white:#fff;--green:#79b7a5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e8f5f0 0%,#fff7e5 100%);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:var(--ink)}
+.app{width:min(100%,540px);margin:auto;padding:calc(14px + env(safe-area-inset-top)) 14px 28px}
+.brand{font-weight:900;text-align:center;font-size:14px;letter-spacing:.5px}
+h1{text-align:center;font-size:clamp(28px,8vw,42px);margin:3px 0 0;line-height:1.1}
+.sub{text-align:center;margin:7px 0 16px;color:#5d6b70;font-weight:700}
+.card{background:rgba(255,255,255,.92);border:3px solid var(--ink);border-radius:28px;padding:13px;box-shadow:0 8px 0 rgba(38,52,58,.15)}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 12px;font-weight:900;font-size:17px}
+#grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cell{position:relative;aspect-ratio:1;border:3px solid var(--ink);border-radius:16px;background:#f5e6c9;box-shadow:0 4px 0 rgba(38,52,58,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;perspective:700px}
+.inner{position:absolute;inset:0;border-radius:13px;display:flex;align-items:center;justify-content:center;transition:transform .38s;transform-style:preserve-3d}
+.face,.back{position:absolute;inset:0;border-radius:13px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden}
+.face{font-size:27px;background:linear-gradient(135deg,#f8eacb,#f2d99d)}
+.back{font-size:34px;background:#fff;transform:rotateY(180deg)}
+.cell.open .inner{transform:rotateY(180deg)}
+.cell.found{border-color:#4b9c82}
+.cell.found .back{background:#e2f4ec}
+.cell:active{transform:translateY(2px)}
+#message{text-align:center;min-height:28px;margin:11px 0 2px;font-weight:900;font-size:17px}
+button{display:block;margin:12px auto 2px;border:3px solid var(--ink);border-radius:18px;background:var(--yellow);padding:11px 20px;font-size:17px;font-weight:900;box-shadow:0 5px 0 var(--ink)}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+#win{display:none;position:fixed;inset:0;background:rgba(38,52,58,.48);align-items:center;justify-content:center;padding:22px;z-index:9}
+.winbox{background:var(--white);border:4px solid var(--ink);border-radius:30px;padding:28px 22px;text-align:center;width:min(92vw,390px);box-shadow:0 10px 0 rgba(0,0,0,.18)}
+.winbox .big{font-size:56px}.winbox h2{font-size:30px;margin:4px 0}.winbox p{font-weight:800;color:#5d6b70}
+.small{text-align:center;font-size:12px;color:#6c777b;margin-top:13px}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="brand">✦ Sammie's life studio ✦</div>
+  <h1>🚗 Find the Vehicles!</h1>
+  <p class="sub">Tap a box and find all 5 vehicles! 👀</p>
+  <section class="card">
+    <div class="hud"><span>FOUND <b id="found">0</b> / 5</span><span>⭐ <b id="score">0</b></span></div>
+    <div id="grid"></div>
+    <div id="message">Ready? Let's play! 🎮</div>
+    <button id="restart">🔄 PLAY AGAIN</button>
+  </section>
+  <div class="small">Original classroom game • Sammie's life studio</div>
+</main>
+<div id="win">
+  <div class="winbox">
+    <div class="big">🏆🚗🚌🚁</div>
+    <h2>You Found Them All!</h2>
+    <p>Great job! ⭐ <span id="finalScore">0</span></p>
+    <button id="again">PLAY AGAIN 🎮</button>
+  </div>
+</div>
+<script>
+const targets=["🚗","🚌","🚲","✈️","🚁"];
+const decoys=["🌳","☁️","⭐","🏠","🎈","🌈","🌼","🧸","⚽","🍎","🪁","🐶","🎁","🌙","🛟","🧩","🎵","☀️","🪴","🍀"];
+let found=0,score=0,locked=false;
+const shuffle=a=>a.sort(()=>Math.random()-.5);
+function start(){
+ found=0;score=0;locked=false;
+ document.querySelector("#found").textContent=0;
+ document.querySelector("#score").textContent=0;
+ document.querySelector("#message").textContent="Ready? Let's play! 🎮";
+ document.querySelector("#win").style.display="none";
+ const items=shuffle(targets.map(emoji=>({emoji,target:true})).concat(decoys.map(emoji=>({emoji,target:false}))));
+ const grid=document.querySelector("#grid");grid.innerHTML="";
+ items.forEach(item=>{
+  const cell=document.createElement("button");
+  cell.className="cell";cell.setAttribute("aria-label","Hidden box");
+  cell.innerHTML='<span class="inner"><span class="face">❔</span><span class="back">'+item.emoji+'</span></span>';
+  cell.onclick=()=>{
+   if(locked||cell.classList.contains("open"))return;
+   cell.classList.add("open");
+   if(item.target){
+    cell.classList.add("found");found++;score+=10;
+    document.querySelector("#message").textContent="🎉 Great find!";
+    document.querySelector("#found").textContent=found;
+    document.querySelector("#score").textContent=score;
+    if(found===5){
+      locked=true;
+      document.querySelector("#finalScore").textContent=score;
+      setTimeout(()=>document.querySelector("#win").style.display="flex",500);
+    }
+   }else{
+    score=Math.max(0,score-1);
+    document.querySelector("#score").textContent=score;
+    document.querySelector("#message").textContent="Oops! Try another box! 😊";
+   }
+  };
+  grid.appendChild(cell);
+ });
+}
+document.querySelector("#restart").onclick=start;
+document.querySelector("#again").onclick=start;
+start();
+</script>
+</body>
+</html>
